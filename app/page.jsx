@@ -35,8 +35,10 @@ export default function Login() {
             className="mx-auto h-16 w-auto"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-            Hive CRM <button onClick={logUser}>test</button>
+            Hive CRM 
+          
           </h2>
+          <h3 className='text-gray-500 w-full items-center justify-center flex text-lg'>(Minimalist CRM)</h3>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -88,7 +90,7 @@ export default function Login() {
           <p className="mt-10 text-center text-sm text-gray-400">
             Not a member?{' '}
             <a href="#" className="font-semibold leading-6 text-indigo-400 hover:text-indigo-300">
-              It's invite only, son... too bad
+              It's time.
             </a>
           </p>
         </div>
