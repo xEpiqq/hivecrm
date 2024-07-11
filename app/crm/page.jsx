@@ -11,13 +11,6 @@ import { updateDoc, doc } from "firebase/firestore";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 import { auth } from '../../initFirebase';
 
-const tabs = [
-  { name: 'CRM', href: '#', current: true },
-  { name: 'FOLLOW-UP', href: '#', current: false },
-  { name: 'EMAIL TEMPLATES', href: '#', current: false },
-  { name: 'DATA', href: '#', current: false },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -121,14 +114,6 @@ export default function Example() {
       }
     }
   };
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-      router.push('/'); // Redirect to home after sign-out
-    } catch (error) {
-      console.error('Error signing out: ', error);
-    }
-  };
 
   const handleContactClick = (contact) => {
     setSelectedContact(contact);
@@ -209,102 +194,7 @@ export default function Example() {
             </div>
           </div>
         )}
-        <div className="flex justify-between mx-auto max-w-7xl">
-          <div className="sm:hidden">
-            <label htmlFor="tabs" className="sr-only">Select a tab</label>
-            <select
-              id="tabs"
-              name="tabs"
-              defaultValue={tabs.find((tab) => tab.current).name}
-              className="block w-full rounded-md border-none bg-white/5 py-2 pl-3 pr-10 text-base text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm"
-            >
-              {tabs.map((tab) => (
-                <option key={tab.name}>{tab.name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="hidden sm:block">
-            <nav className="flex border-b border-white/10 py-4">
-              <ul
-                role="list"
-                className="flex min-w-full flex-none gap-x-6 px-2 text-sm font-semibold leading-6 text-gray-400"
-              >
-                {tabs.map((tab) => (
-                  <li key={tab.name}>
-                    <a href={tab.href} className={tab.current ? 'text-indigo-400' : ''}>
-                      {tab.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-          <Menu as="div" className="relative inline-block text-left">
-            <div>
-              <MenuButton className="inline-flex justify-center rounded-md bg-gray-800 p-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-white/10 hover:bg-gray-700">
-                <FontAwesomeIcon icon={faChevronDown} />
-              </MenuButton>
-            </div>
-            <MenuItems
-              className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-            >
-              <div className="py-1">
-                <MenuItem>
-                  <button
-                    onClick={() => setModalOpen(true)}
-                    className="group flex w-full items-center px-4 py-2 text-sm text-gray-700"
-                  >
-                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-3" />
-                    Sign Out
-                  </button>
-                </MenuItem>
-              </div>
-            </MenuItems>
-          </Menu>
-        </div>
-
-        {modalOpen && (
-          <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-              <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-              </div>
-              <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
-                    <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                      <FontAwesomeIcon icon={faSignOutAlt} className="text-red-600" />
-                    </div>
-                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                      <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">Sign Out</h3>
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-500">Are you sure you want to sign out?</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                  <button
-                    type="button"
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={handleSignOut}
-                  >
-                    Sign Out
-                  </button>
-                  <button
-                    type="button"
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
+        
         <div className="mt-10 mx-auto max-w-7xl">
           <div className="flex items-center border-2 border-gray-800 pl-2 rounded-lg w-1/3 justify-between h-10">
             <button className="text-sm font-semibold text-white mr-2">Name:</button>
