@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithGoogle, onAuthChange, db, collection, addDoc, getDocs, signOut } from '../../initFirebase';
@@ -7,16 +7,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faSignOutAlt, faEdit, faTrash, faEllipsisV, faTimes, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { CSSTransition } from 'react-transition-group';
 import { format } from 'date-fns';
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 import { auth } from '../../initFirebase';
+import SearchableDropdown from './SearchableDropdown'; // Import the new component
+
+const states = [
+  'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida',
+  'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'maine',
+  'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 'missouri', 'montana', 'nebraska', 
+  'nevada', 'new_hampshire', 'new_jersey', 'new_mexico', 'new_york', 'north_carolina', 'north_dakota', 'ohio',
+  'oklahoma', 'oregon', 'pennsylvania', 'rhode_island', 'south_carolina', 'south_dakota', 'tennessee', 'texas',
+  'utah', 'vermont', 'virginia', 'washington', 'west_virginia', 'wisconsin', 'wyoming'
+];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function Example() {
-
   const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [newContact, setNewContact] = useState({
@@ -24,7 +33,9 @@ export default function Example() {
     email: '',
     phone: '',
     schoolDistrict: '',
-    school: ''
+    school: '',
+    state: '',
+    link: ''
   });
   const [expanded, setExpanded] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,6 +44,8 @@ export default function Example() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [contactToDelete, setContactToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [theLink, setTheLink] = useState("");
 
   const handleDeleteClick = (contact) => {
     setContactToDelete(contact);
@@ -42,7 +55,18 @@ export default function Example() {
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
+      // Delete the contact document
       await deleteDoc(doc(db, 'contacts', contactToDelete.id));
+      
+      // Remove the contact UID from the state's document
+      if (contactToDelete.state && contactToDelete.link) {
+        const stateDocRef = doc(db, contactToDelete.state.toLowerCase(), contactToDelete.link);
+        await updateDoc(stateDocRef, {
+          contacts: arrayRemove(contactToDelete.id)
+        });
+      }
+
+      // Update local state
       setContacts(contacts.filter(contact => contact.id !== contactToDelete.id));
       setDeleteModalOpen(false);
     } catch (error) {
@@ -92,18 +116,31 @@ export default function Example() {
     e.preventDefault();
     if (user) {
       try {
-        await addDoc(collection(db, 'contacts'), {
+        const docRef = await addDoc(collection(db, 'contacts'), {
           ...newContact,
+          link: theLink,
           userId: user.uid,
         });
+
+        // Update the state document with the new contact UID
+        if (newContact.state && selectedDistrict && selectedDistrict.link) {
+          const stateDocRef = doc(db, newContact.state.toLowerCase(), selectedDistrict.link);
+          await updateDoc(stateDocRef, {
+            contacts: arrayUnion(docRef.id)
+          });
+        }
+
         setNewContact({
           name: '',
           email: '',
           phone: '',
           schoolDistrict: '',
-          school: ''
+          school: '',
+          state: '',
+          link: ''
         });
         setExpanded(false);
+
         // Refresh the contact list
         const contactsCol = collection(db, 'contacts');
         const contactSnapshot = await getDocs(contactsCol);
@@ -230,13 +267,30 @@ export default function Example() {
                   placeholder="Phone"
                   className="bg-gray-900 text-white rounded-md py-2 px-2 focus:outline-none focus:ring-0"
                 />
-                <input
-                  type="text"
-                  name="schoolDistrict"
+                <div className="relative">
+                  <label className="block text-sm font-medium text-white">State</label>
+                  <select
+                    name="state"
+                    value={newContact.state}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md bg-gray-800 text-white border-gray-700 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  >
+                    <option value="">Select State</option>
+                    {states.map((state, index) => (
+                      <option key={index} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <SearchableDropdown
+                  setTheLink={setTheLink}
+                  state={newContact.state}
                   value={newContact.schoolDistrict}
-                  onChange={handleInputChange}
-                  placeholder="School District"
-                  className="bg-gray-900 text-white rounded-md py-2 px-2 focus:outline-none focus:ring-0"
+                  onChange={(value, district) => {
+                    setNewContact({ ...newContact, schoolDistrict: value });
+                    setSelectedDistrict(district);
+                  }}
                 />
                 <input
                   type="text"
@@ -322,6 +376,7 @@ export default function Example() {
     </>
   );
 }
+
 
 function Drawer({ isOpen, onClose, contact, onCheckboxChange, refreshContacts }) {
   const [editableContact, setEditableContact] = useState(contact);
