@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 import { auth } from '../../initFirebase';
-import SearchableDropdown from './SearchableDropdown'; // Import the new component
+import SearchableDropdown from './searchabledropdown'; // Import the new component
 
 const states = [
   'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida',
