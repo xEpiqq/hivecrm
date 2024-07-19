@@ -54,8 +54,8 @@ export default function SearchableDropdown({ state, value, onChange, setTheLink 
         type="text"
         value={searchTerm}
         onChange={handleChange}
-        className="mt-1 block w-full rounded-md bg-gray-800 text-white border-gray-700 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-        placeholder="Start typing to search..."
+        className="mt-1 block w-full rounded-md bg-gray-900 text-white border-gray-700 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 px-2 py-[6px]"
+        placeholder="District"
       />
       {filteredDistricts.length > 0 && (
         <ul className="absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto text-base leading-6 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
