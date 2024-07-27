@@ -171,10 +171,12 @@ export default function Example() {
               <thead className="border-b border-white/10 text-sm leading-6 text-white">
                 <tr>
                   <th scope="col" className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8">Name</th>
+                  <th scope="col" className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8">Enrollment</th>
+                  <th scope="col" className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8">Desc</th>
                   <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold sm:table-cell">City</th>
                   <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">State</th>
-                  <th scope="col" className="hidden py-2 pl-0 pr-4 font-semibold sm:table-cell">Population</th>
-                  <th scope="col" className="hidden py-2 pl-0 pr-4 font-semibold sm:table-cell">Choir Teacher</th>
+                  <th scope="col" className="hidden py-2 pl-0 pr-4 font-semibold sm:table-cell">Phone</th>
+                  <th scope="col" className="hidden py-2 pl-0 pr-4 font-semibold sm:table-cell">Teacher</th>
                   <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">Actions</th>
                 </tr>
               </thead>
@@ -186,6 +188,16 @@ export default function Example() {
                         <div className="truncate text-sm font-medium leading-6 text-white">{school.name}</div>
                       </div>
                     </td>
+                    <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
+                      <div className="flex items-center gap-x-4">
+                        <div className="truncate text-sm font-medium leading-6 text-white">{school.enrollment}</div>
+                      </div>
+                    </td>
+                    <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
+                      <div className="flex items-center gap-x-4">
+                        <div className="truncate text-xs font-medium leading-6 text-white">{school.naics_desc}</div>
+                      </div>
+                    </td>
                     <td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">
                       <div className="text-sm leading-6 text-gray-400">{school.city}</div>
                     </td>
@@ -193,7 +205,7 @@ export default function Example() {
                       {school.state}
                     </td>
                     <td className="hidden py-4 pl-0 pr-4 text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">
-                      {school.population}
+                      {school.telephone}
                     </td>
                     <td className="hidden py-4 pl-0 pr-4 text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">
                       {school.choirteacher}
